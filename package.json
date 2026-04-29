@@ -10,13 +10,19 @@
     "build": "vite build && electron-builder",
     "preview": "vite preview"
   },
-  "keywords": ["productivity", "widget", "leetcode", "github"],
+  "keywords": [
+    "productivity",
+    "widget",
+    "leetcode",
+    "github"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "auto-launch": "^5.0.6",
     "axios": "^1.6.8",
     "electron-store": "^8.2.0",
+    "lucide-react": "^1.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
