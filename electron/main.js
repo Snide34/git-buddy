@@ -71,42 +71,93 @@ app.on('window-all-closed', () => {
   }
 });
 
-// IPC Handlers
-ipcMain.handle('get-config', () => {
-  return store.get('config', {
-    leetcodeUsername: '',
-    githubUsername: '',
-    monthlyQuestions: []
-  });
+// IPC Handlers with proper error handling
+ipcMain.handle('get-config', (event) => {
+  try {
+    return store.get('config', {
+      leetcodeUsername: '',
+      githubUsername: '',
+      githubToken: '',
+      monthlyQuestions: []
+    });
+  } catch (error) {
+    console.error('Error getting config:', error);
+    return { error: error.message };
+  }
 });
 
 ipcMain.handle('save-config', (event, config) => {
-  store.set('config', config);
-  return true;
+  try {
+    if (!config || typeof config !== 'object') {
+      throw new Error('Invalid config object');
+    }
+    store.set('config', config);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving config:', error);
+    return { success: false, error: error.message };
+  }
 });
 
-ipcMain.handle('get-cache', (key) => {
-  return store.get(`cache.${key}`);
+ipcMain.handle('get-cache', (event, key) => {
+  try {
+    if (!key || typeof key !== 'string') {
+      throw new Error('Invalid cache key');
+    }
+    return store.get(`cache.${key}`);
+  } catch (error) {
+    console.error('Error getting cache:', error);
+    return { error: error.message };
+  }
 });
 
 ipcMain.handle('save-cache', (event, key, data) => {
-  store.set(`cache.${key}`, data);
-  return true;
+  try {
+    if (!key || typeof key !== 'string') {
+      throw new Error('Invalid cache key');
+    }
+    store.set(`cache.${key}`, data);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving cache:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 ipcMain.handle('toggle-autolaunch', async (event, enable) => {
-  if (enable) {
-    await autoLauncher.enable();
-  } else {
-    await autoLauncher.disable();
+  try {
+    if (enable) {
+      await autoLauncher.enable();
+    } else {
+      await autoLauncher.disable();
+    }
+    return await autoLauncher.isEnabled();
+  } catch (error) {
+    console.error('Error toggling autolaunch:', error);
+    return { error: error.message };
   }
-  return await autoLauncher.isEnabled();
 });
 
-ipcMain.handle('minimize-window', () => {
-  mainWindow.minimize();
+ipcMain.handle('minimize-window', (event) => {
+  try {
+    if (mainWindow) {
+      mainWindow.minimize();
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Error minimizing window:', error);
+    return { success: false, error: error.message };
+  }
 });
 
-ipcMain.handle('close-window', () => {
-  mainWindow.close();
+ipcMain.handle('close-window', (event) => {
+  try {
+    if (mainWindow) {
+      mainWindow.close();
+    }
+    return { success: true };
+  } catch (error) {
+    console.error('Error closing window:', error);
+    return { success: false, error: error.message };
+  }
 });

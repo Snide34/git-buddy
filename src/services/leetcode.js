@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const LEETCODE_API = 'https://leetcode.com/graphql';
+const API_TIMEOUT = 10000; // 10 seconds
 
 export async function fetchLeetCodeData(username) {
   try {
-    if (!username) {
+    if (!username || typeof username !== 'string') {
       // Return mock data for demo
       return getMockLeetCodeData();
     }
@@ -34,18 +35,42 @@ export async function fetchLeetCodeData(username) {
     const response = await axios.post(LEETCODE_API, {
       query,
       variables: { username }
-    });
+    }, { timeout: API_TIMEOUT });
+
+    // Check for GraphQL errors
+    if (response.data.errors) {
+      console.error('LeetCode GraphQL error:', response.data.errors);
+      return getMockLeetCodeData();
+    }
 
     const data = response.data.data;
+    if (!data || !data.matchedUser) {
+      console.error('Invalid LeetCode response');
+      return getMockLeetCodeData();
+    }
+
     const submissions = data.recentSubmissionList || [];
-    const calendar = JSON.parse(data.matchedUser.submissionCalendar || '{}');
+    
+    // Safely parse submission calendar
+    let calendar = {};
+    try {
+      const calendarStr = data.matchedUser.submissionCalendar;
+      calendar = typeof calendarStr === 'string' ? JSON.parse(calendarStr) : calendarStr || {};
+    } catch (e) {
+      console.error('Error parsing calendar:', e);
+      calendar = {};
+    }
     
     // Convert calendar to date-based object
     const contributionCalendar = {};
     Object.keys(calendar).forEach(timestamp => {
-      const date = new Date(parseInt(timestamp) * 1000);
-      const dateStr = date.toISOString().split('T')[0];
-      contributionCalendar[dateStr] = calendar[timestamp];
+      try {
+        const date = new Date(parseInt(timestamp) * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+        contributionCalendar[dateStr] = calendar[timestamp];
+      } catch (e) {
+        console.error('Error processing calendar entry:', e);
+      }
     });
     
     // Get today's timestamp
@@ -59,14 +84,14 @@ export async function fetchLeetCodeData(username) {
     }).length;
 
     // Get total solved
-    const stats = data.matchedUser.submitStats.acSubmissionNum;
-    const totalSolved = stats.reduce((sum, item) => sum + item.count, 0);
+    const stats = data.matchedUser.submitStats?.acSubmissionNum || [];
+    const totalSolved = stats.reduce((sum, item) => sum + (item.count || 0), 0);
 
-    // Mock monthly progress (you can customize this)
+    // Mock monthly progress
     const monthlyGoal = 30;
     const monthlyProgress = Math.min((totalSolved % monthlyGoal) / monthlyGoal * 100, 100);
 
-    // Generate today's tasks (mock data - customize based on your monthly plan)
+    // Generate today's tasks
     const todaysTasks = [
       { name: 'Two Sum', difficulty: 'Easy', completed: solvedToday > 0 },
       { name: 'Add Two Numbers', difficulty: 'Medium', completed: solvedToday > 1 },
@@ -78,11 +103,11 @@ export async function fetchLeetCodeData(username) {
       totalSolved,
       monthlyProgress,
       todaysTasks,
-      ranking: data.matchedUser.profile.ranking,
+      ranking: data.matchedUser.profile?.ranking || 0,
       contributionCalendar
     };
   } catch (error) {
-    console.error('LeetCode API error:', error);
+    console.error('LeetCode API error:', error.message);
     // Return mock data on error
     return getMockLeetCodeData();
   }

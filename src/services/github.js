@@ -1,21 +1,33 @@
 import axios from 'axios';
 
+const API_TIMEOUT = 10000; // 10 seconds
+
 export async function fetchGitHubData(username, token = null) {
   try {
-    if (!username) {
+    if (!username || typeof username !== 'string') {
       // Return mock data for demo
       return getMockGitHubData();
     }
 
     const headers = token ? { Authorization: `token ${token}` } : {};
     
-    // Fetch user events
+    // Fetch user events with timeout
     const eventsResponse = await axios.get(
       `https://api.github.com/users/${username}/events`,
-      { headers }
+      { headers, timeout: API_TIMEOUT }
     );
 
+    // Check rate limit
+    const remaining = eventsResponse.headers['x-ratelimit-remaining'];
+    if (remaining && parseInt(remaining) < 10) {
+      console.warn('GitHub API rate limit low:', remaining);
+    }
+
     const events = eventsResponse.data;
+    if (!Array.isArray(events)) {
+      console.error('Invalid GitHub events response');
+      return getMockGitHubData();
+    }
     
     // Get today's date
     const today = new Date();
@@ -25,12 +37,16 @@ export async function fetchGitHubData(username, token = null) {
     const contributionCalendar = {};
     
     events.forEach(event => {
-      const eventDate = new Date(event.created_at);
-      const dateStr = eventDate.toISOString().split('T')[0];
-      
-      if (event.type === 'PushEvent') {
-        const commits = event.payload.commits?.length || 0;
-        contributionCalendar[dateStr] = (contributionCalendar[dateStr] || 0) + commits;
+      try {
+        const eventDate = new Date(event.created_at);
+        const dateStr = eventDate.toISOString().split('T')[0];
+        
+        if (event.type === 'PushEvent') {
+          const commits = event.payload?.commits?.length || 0;
+          contributionCalendar[dateStr] = (contributionCalendar[dateStr] || 0) + commits;
+        }
+      } catch (e) {
+        console.error('Error processing event:', e);
       }
     });
 
@@ -41,28 +57,37 @@ export async function fetchGitHubData(username, token = null) {
     // Count active repos
     const reposActive = new Set();
     events.forEach(event => {
-      const eventDate = new Date(event.created_at);
-      eventDate.setHours(0, 0, 0, 0);
-      if (eventDate.getTime() === today.getTime() && event.type === 'PushEvent') {
-        reposActive.add(event.repo.name);
+      try {
+        const eventDate = new Date(event.created_at);
+        eventDate.setHours(0, 0, 0, 0);
+        if (eventDate.getTime() === today.getTime() && event.type === 'PushEvent') {
+          reposActive.add(event.repo?.name);
+        }
+      } catch (e) {
+        console.error('Error processing repo:', e);
       }
     });
 
-    // Fetch user stats
+    // Fetch user stats with timeout
     const userResponse = await axios.get(
       `https://api.github.com/users/${username}`,
-      { headers }
+      { headers, timeout: API_TIMEOUT }
     );
+
+    if (!userResponse.data) {
+      console.error('Invalid GitHub user response');
+      return getMockGitHubData();
+    }
 
     return {
       commitsToday,
       reposActive: reposActive.size,
-      totalRepos: userResponse.data.public_repos,
-      followers: userResponse.data.followers,
+      totalRepos: userResponse.data.public_repos || 0,
+      followers: userResponse.data.followers || 0,
       contributionCalendar
     };
   } catch (error) {
-    console.error('GitHub API error:', error);
+    console.error('GitHub API error:', error.message);
     // Return mock data on error
     return getMockGitHubData();
   }
