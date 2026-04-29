@@ -316,7 +316,7 @@ function App() {
         <div style={{
           width: '100%',
           height: '100%',
-          background: 'rgba(19, 19, 21, 0.95)',
+          background: 'rgba(19, 19, 21, 0.30)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '0px',
@@ -442,8 +442,8 @@ function App() {
                     {data.loading ? '...' : `${data.leetcode?.solvedToday || 0}`}
                   </span>
                 </div>
-                <div className="heatmap-grid" style={{ height: '60px' }}>
-                  {[...Array(35)].map((_, i) => {
+                <div className="heatmap-grid" style={{ gridTemplateColumns: 'repeat(6, 1fr)', height: '50px' }}>
+                  {[...Array(30)].map((_, i) => {
                     const intensities = [
                       'rgba(206, 127, 0, 0)',
                       'rgba(206, 127, 0, 0.15)',
@@ -452,7 +452,7 @@ function App() {
                       'rgba(206, 127, 0, 0.95)'
                     ];
                     const intensity = Math.floor(Math.random() * 5);
-                    const isToday = i === 34;
+                    const isToday = i === 29;
                     return (
                       <div
                         key={i}
@@ -502,8 +502,8 @@ function App() {
                     {data.loading ? '...' : `${data.github?.commitsToday || 0}`}
                   </span>
                 </div>
-                <div className="heatmap-grid" style={{ height: '60px' }}>
-                  {[...Array(35)].map((_, i) => {
+                <div className="heatmap-grid" style={{ gridTemplateColumns: 'repeat(6, 1fr)', height: '50px' }}>
+                  {[...Array(30)].map((_, i) => {
                     const intensities = [
                       'rgba(71, 226, 102, 0)',
                       'rgba(71, 226, 102, 0.15)',
