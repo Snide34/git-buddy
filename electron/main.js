@@ -17,16 +17,20 @@ function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 650,
-    x: Math.floor((width - 500) / 2),
-    y: Math.floor((height - 650) / 2),
-    frame: true,
-    transparent: false,
-    alwaysOnTop: false,
+    width: 450,
+    height: 800,
+    x: Math.floor(width - 450 - 20),
+    y: Math.floor(height - 800 - 20),
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
     skipTaskbar: false,
-    resizable: true,
-    backgroundColor: '#1e293b',
+    resizable: false,
+    movable: true,
+    minimizable: true,
+    maximizable: false,
+    closable: true,
+    show: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -43,6 +47,11 @@ function createWindow() {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
   }
+
+  // Show window when ready
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   // Make window draggable
   mainWindow.setIgnoreMouseEvents(false);

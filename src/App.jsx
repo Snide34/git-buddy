@@ -69,6 +69,7 @@ function App() {
     loading: true,
     error: null
   });
+  const [isMinimized, setIsMinimized] = useState(false);
 
   // Load config on mount
   useEffect(() => {
@@ -216,10 +217,10 @@ function App() {
         }
         
         body {
-          background: radial-gradient(circle at top left, #1e293b, #0f172a, #020617);
-          min-height: 100vh;
+          background: transparent;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           color: #e4e2e4;
+          overflow: hidden;
         }
         
         .glass-container {
@@ -230,21 +231,6 @@ function App() {
         .glass-card-nested {
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .material-symbols-outlined {
-          font-family: 'Material Symbols Outlined';
-          font-weight: normal;
-          font-style: normal;
-          font-size: 24px;
-          display: inline-block;
-          line-height: 1;
-          text-transform: none;
-          letter-spacing: normal;
-          word-wrap: normal;
-          white-space: nowrap;
-          direction: ltr;
-          vertical-align: middle;
         }
         
         .github-glow {
@@ -264,32 +250,26 @@ function App() {
           scrollbar-width: none;
         }
         
-        .grid-2x2 {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-        }
-        
         .heatmap-grid {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
-          gap: 4px;
-          height: 128px;
+          gap: 2px;
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 8px;
-          padding: 8px;
+          border-radius: 6px;
+          padding: 6px;
           overflow: hidden;
         }
         
         .heatmap-cell {
-          border-radius: 4px;
+          border-radius: 2px;
           transition: all 0.2s ease;
           cursor: pointer;
+          aspect-ratio: 1;
         }
         
         .heatmap-cell:hover {
-          transform: scale(1.1);
+          transform: scale(1.15);
           z-index: 10;
         }
       `}</style>
@@ -328,499 +308,340 @@ function App() {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '32px',
+        padding: '20px',
         position: 'relative',
         zIndex: 10
       }}>
+        {/* Desktop Widget Container */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '12px',
-          width: '100%',
-          maxWidth: '960px',
-          height: '720px'
+          width: '420px',
+          background: 'rgba(19, 19, 21, 0.85)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '16px',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(170, 199, 255, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease'
         }}>
-          {/* LeetCode Card */}
+          {/* Widget Header - macOS Style */}
           <div style={{
-            background: 'rgba(19, 19, 21, 0.7)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '16px',
             display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '12px 16px',
+            background: 'rgba(0, 0, 0, 0.2)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            cursor: 'grab'
           }}>
             <div style={{
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '4px'
+              gap: '8px'
             }}>
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <span style={{ fontSize: '20px', color: '#ce7f00' }}>💻</span>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  lineHeight: '24px',
-                  color: '#e4e2e4'
-                }}>LeetCode</h3>
-              </div>
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#FF5F57',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: '0 0 4px rgba(255, 95, 87, 0.5)'
+              }} onClick={() => window.electron?.closeWindow()}></div>
               <div style={{
-                padding: '4px 8px',
-                borderRadius: '9999px',
-                background: 'rgba(206, 127, 0, 0.1)',
-                border: '1px solid rgba(206, 127, 0, 0.3)',
-                boxShadow: '0 0 8px #ce7f00'
-              }}>
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: '700',
-                  color: '#ce7f00',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>
-                  {data.loading ? '...' : `${data.leetcode?.solvedToday || 0} problems today`}
-                </span>
-              </div>
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#FFBD2E',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: '0 0 4px rgba(255, 189, 46, 0.5)'
+              }} onClick={() => setIsMinimized(!isMinimized)}></div>
+              <div style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                background: '#28CA42',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                boxShadow: '0 0 4px rgba(40, 202, 66, 0.5)'
+              }}></div>
             </div>
-
-            {/* Heatmap */}
-            <div className="heatmap-grid">
-              {[...Array(35)].map((_, i) => {
-                const intensities = [
-                  'rgba(206, 127, 0, 0)',
-                  'rgba(206, 127, 0, 0.1)',
-                  'rgba(206, 127, 0, 0.3)',
-                  'rgba(206, 127, 0, 0.6)',
-                  'rgba(206, 127, 0, 0.9)'
-                ];
-                const intensity = Math.floor(Math.random() * 5);
-                const isToday = i === 34;
-                return (
-                  <div
-                    key={i}
-                    className="heatmap-cell"
-                    style={{
-                      background: intensities[intensity],
-                      border: isToday ? '2px solid #8B5CF6' : 'none',
-                      boxShadow: isToday ? '0 0 8px #ce7f00' : 'none'
-                    }}
-                  ></div>
-                );
-              })}
-            </div>
-
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-around',
-              alignItems: 'flex-end',
+            <h3 style={{
+              fontSize: '13px',
+              fontWeight: '600',
+              color: '#e4e2e4',
               flex: 1,
-              paddingBottom: '8px'
-            }}>
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '11px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Easy</p>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#ce7f00' }}>124</p>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '11px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Med</p>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#e4e2e4' }}>56</p>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: '11px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Hard</p>
-                <p style={{ fontSize: '13px', fontWeight: '500', color: '#ffb4ab' }}>12</p>
-              </div>
-            </div>
-          </div>
-
-          {/* GitHub Card */}
-          <div style={{
-            background: 'rgba(19, 19, 21, 0.7)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '4px'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <span style={{ fontSize: '20px', color: '#47e266' }}>🔵</span>
-                <h3 style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  lineHeight: '24px',
-                  color: '#e4e2e4'
-                }}>GitHub</h3>
-              </div>
-              <div style={{
+              textAlign: 'center'
+            }}>DevPulse Pro</h3>
+            <button
+              onClick={handleRefresh}
+              disabled={data.loading}
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '4px',
+                color: '#aac7ff',
+                cursor: data.loading ? 'not-allowed' : 'pointer',
                 padding: '4px 8px',
-                borderRadius: '9999px',
-                background: 'rgba(71, 226, 102, 0.1)',
-                border: '1px solid rgba(71, 226, 102, 0.3)',
-                boxShadow: '0 0 8px #47e266'
-              }}>
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: '700',
-                  color: '#47e266',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>
-                  {data.loading ? '...' : `${data.github?.commitsToday || 0} commits today`}
-                </span>
-              </div>
-            </div>
-
-            {/* Heatmap */}
-            <div className="heatmap-grid">
-              {[...Array(35)].map((_, i) => {
-                const intensities = [
-                  'rgba(71, 226, 102, 0)',
-                  'rgba(71, 226, 102, 0.1)',
-                  'rgba(71, 226, 102, 0.3)',
-                  'rgba(71, 226, 102, 0.6)',
-                  'rgba(71, 226, 102, 0.8)'
-                ];
-                const intensity = Math.floor(Math.random() * 5);
-                return (
-                  <div
-                    key={i}
-                    className="heatmap-cell"
-                    style={{
-                      background: intensities[intensity]
-                    }}
-                  ></div>
-                );
-              })}
-            </div>
-
-            <div style={{ marginTop: 'auto', paddingTop: '8px', space: '8px' }}>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '14px',
-                fontWeight: '500',
-                marginBottom: '8px'
-              }}>
-                <span style={{ color: '#c0c6d6' }}>Last commit</span>
-                <span style={{ color: '#47e266' }}>22h ago</span>
-              </div>
-              <div style={{
-                width: '100%',
-                height: '4px',
-                background: 'rgba(53, 52, 55, 1)',
-                borderRadius: '9999px',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  height: '100%',
-                  width: '85%',
-                  background: '#47e266',
-                  borderRadius: '9999px',
-                  boxShadow: '0 0 8px rgba(71, 226, 102, 0.5)'
-                }}></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Today's Grind */}
-          <div style={{
-            background: 'rgba(19, 19, 21, 0.7)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '16px'
-            }}>
-              <span style={{ fontSize: '20px', color: '#aac7ff' }}>✓</span>
-              <h3 style={{
-                fontSize: '18px',
+                fontSize: '11px',
                 fontWeight: '600',
-                lineHeight: '24px',
-                color: '#e4e2e4'
-              }}>Today's Grind</h3>
-            </div>
+                transition: 'all 0.2s',
+                opacity: data.loading ? 0.5 : 1
+              }}
+              onMouseEnter={(e) => !data.loading && (e.target.style.background = 'rgba(255, 255, 255, 0.15)')}
+              onMouseLeave={(e) => !data.loading && (e.target.style.background = 'rgba(255, 255, 255, 0.1)')}
+            >
+              {data.loading ? '⟳' : '↻'}
+            </button>
+          </div>
 
+          {/* Widget Content */}
+          {!isMinimized && (
             <div style={{
-              flex: 1,
-              overflowY: 'auto',
+              padding: '12px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px'
+              gap: '10px',
+              maxHeight: 'calc(100vh - 200px)',
+              overflowY: 'auto'
             }} className="hide-scrollbar">
-              {[
-                { name: 'Two Sum (Easy)', category: 'Algorithms • LeetCode', completed: true },
-                { name: 'Add Two Numbers (Medium)', category: 'Linked Lists • LeetCode', completed: false },
-                { name: 'Validate Binary Tree', category: 'Trees • LeetCode', completed: false }
-              ].map((task, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '12px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
-                >
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      cursor: 'pointer',
-                      accentColor: '#aac7ff'
-                    }}
-                    readOnly
-                  />
-                  <div style={{ flex: 1 }}>
-                    <p style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: task.completed ? '#c0c6d6' : '#e4e2e4',
-                      textDecoration: task.completed ? 'line-through' : 'none'
-                    }}>
-                      {task.name}
-                    </p>
-                    <p style={{
-                      fontSize: '10px',
-                      color: 'rgba(192, 198, 214, 0.6)',
-                      fontWeight: '700',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      {task.category}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Current Sprint */}
-          <div style={{
-            background: 'rgba(19, 19, 21, 0.7)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '16px'
-            }}>
-              <span style={{ fontSize: '20px', color: '#aac7ff' }}>🚀</span>
-              <h3 style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                lineHeight: '24px',
-                color: '#e4e2e4'
-              }}>Current Sprint</h3>
-            </div>
-
-            <div style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px'
-            }}>
-              {[
-                { name: 'Refactor Auth', progress: 75 },
-                { name: 'Add Tests', progress: 30 }
-              ].map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end'
-                  }}>
-                    <p style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      color: '#e4e2e4'
-                    }}>
-                      {item.name}
-                    </p>
-                    <p style={{
-                      fontSize: '11px',
-                      fontWeight: '500',
-                      color: '#aac7ff',
-                      fontFamily: 'Space Grotesk'
-                    }}>
-                      {item.progress}%
-                    </p>
-                  </div>
-                  <div style={{
-                    width: '100%',
-                    height: '8px',
-                    background: 'rgba(53, 52, 55, 1)',
-                    borderRadius: '9999px',
-                    overflow: 'hidden'
-                  }}>
-                    <div style={{
-                      height: '100%',
-                      width: `${item.progress}%`,
-                      background: '#aac7ff',
-                      borderRadius: '9999px',
-                      transition: 'width 0.3s ease'
-                    }}></div>
-                  </div>
-                </div>
-              ))}
-
+              
+              {/* LeetCode Mini Card */}
               <div style={{
-                padding: '12px',
-                background: 'rgba(170, 199, 255, 0.1)',
-                border: '1px solid rgba(170, 199, 255, 0.2)',
-                borderRadius: '8px',
-                marginTop: 'auto'
+                background: 'rgba(206, 127, 0, 0.1)',
+                border: '1px solid rgba(206, 127, 0, 0.2)',
+                borderRadius: '10px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
               }}>
                 <div style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '4px'
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}>
-                  <span style={{ fontSize: '16px', color: '#aac7ff' }}>ℹ️</span>
-                  <p style={{
-                    fontSize: '10px',
-                    fontWeight: '700',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    color: '#aac7ff'
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
                   }}>
-                    Deadline Approaching
-                  </p>
+                    <span style={{ fontSize: '16px' }}>💻</span>
+                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#ce7f00' }}>LeetCode</span>
+                  </div>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    color: '#ce7f00',
+                    background: 'rgba(206, 127, 0, 0.2)',
+                    padding: '2px 6px',
+                    borderRadius: '4px'
+                  }}>
+                    {data.loading ? '...' : `${data.leetcode?.solvedToday || 0}`}
+                  </span>
                 </div>
-                <p style={{
-                  fontSize: '14px',
-                  color: '#d6e3ff',
-                  lineHeight: '1.4'
+                <div className="heatmap-grid" style={{ height: '60px' }}>
+                  {[...Array(35)].map((_, i) => {
+                    const intensities = [
+                      'rgba(206, 127, 0, 0)',
+                      'rgba(206, 127, 0, 0.15)',
+                      'rgba(206, 127, 0, 0.35)',
+                      'rgba(206, 127, 0, 0.65)',
+                      'rgba(206, 127, 0, 0.95)'
+                    ];
+                    const intensity = Math.floor(Math.random() * 5);
+                    const isToday = i === 34;
+                    return (
+                      <div
+                        key={i}
+                        className="heatmap-cell"
+                        style={{
+                          background: intensities[intensity],
+                          border: isToday ? '1px solid #8B5CF6' : 'none',
+                          boxShadow: isToday ? '0 0 6px #ce7f00' : 'none'
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* GitHub Mini Card */}
+              <div style={{
+                background: 'rgba(71, 226, 102, 0.1)',
+                border: '1px solid rgba(71, 226, 102, 0.2)',
+                borderRadius: '10px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}>
-                  Sprint v2.4.0 ends in <span style={{ fontWeight: '700' }}>2 days</span>. Keep pushing!
-                </p>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <span style={{ fontSize: '16px' }}>🔵</span>
+                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#47e266' }}>GitHub</span>
+                  </div>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    color: '#47e266',
+                    background: 'rgba(71, 226, 102, 0.2)',
+                    padding: '2px 6px',
+                    borderRadius: '4px'
+                  }}>
+                    {data.loading ? '...' : `${data.github?.commitsToday || 0}`}
+                  </span>
+                </div>
+                <div className="heatmap-grid" style={{ height: '60px' }}>
+                  {[...Array(35)].map((_, i) => {
+                    const intensities = [
+                      'rgba(71, 226, 102, 0)',
+                      'rgba(71, 226, 102, 0.15)',
+                      'rgba(71, 226, 102, 0.35)',
+                      'rgba(71, 226, 102, 0.65)',
+                      'rgba(71, 226, 102, 0.95)'
+                    ];
+                    const intensity = Math.floor(Math.random() * 5);
+                    return (
+                      <div
+                        key={i}
+                        className="heatmap-cell"
+                        style={{
+                          background: intensities[intensity]
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '8px'
+              }}>
+                <div style={{
+                  background: 'rgba(255, 180, 171, 0.1)',
+                  border: '1px solid rgba(255, 180, 171, 0.2)',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ fontSize: '10px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase' }}>Streak</p>
+                  <p style={{ fontSize: '16px', fontWeight: '900', color: '#e4e2e4' }}>🔥 {data.streak}</p>
+                </div>
+                <div style={{
+                  background: 'rgba(71, 226, 102, 0.1)',
+                  border: '1px solid rgba(71, 226, 102, 0.2)',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ fontSize: '10px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase' }}>Score</p>
+                  <p style={{ fontSize: '16px', fontWeight: '900', color: '#aac7ff' }}>{Math.round(data.score)}%</p>
+                </div>
+              </div>
+
+              {/* Today's Tasks */}
+              <div style={{
+                background: 'rgba(170, 199, 255, 0.1)',
+                border: '1px solid rgba(170, 199, 255, 0.2)',
+                borderRadius: '10px',
+                padding: '8px'
+              }}>
+                <p style={{ fontSize: '11px', fontWeight: '700', color: '#aac7ff', marginBottom: '6px', textTransform: 'uppercase' }}>Today's Grind</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {[
+                    { name: 'Two Sum', completed: true },
+                    { name: 'Add Two Numbers', completed: false },
+                    { name: 'Validate Tree', completed: false }
+                  ].map((task, idx) => (
+                    <div key={idx} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '11px',
+                      color: task.completed ? '#c0c6d6' : '#e4e2e4',
+                      textDecoration: task.completed ? 'line-through' : 'none'
+                    }}>
+                      <span style={{ color: task.completed ? '#4ADE80' : '#aac7ff' }}>
+                        {task.completed ? '✓' : '○'}
+                      </span>
+                      {task.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sprint Progress */}
+              <div style={{
+                background: 'rgba(170, 199, 255, 0.1)',
+                border: '1px solid rgba(170, 199, 255, 0.2)',
+                borderRadius: '10px',
+                padding: '8px'
+              }}>
+                <p style={{ fontSize: '11px', fontWeight: '700', color: '#aac7ff', marginBottom: '6px', textTransform: 'uppercase' }}>Sprint</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {[
+                    { name: 'Refactor Auth', progress: 75 },
+                    { name: 'Add Tests', progress: 40 }
+                  ].map((item, idx) => (
+                    <div key={idx}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontSize: '10px',
+                        marginBottom: '2px'
+                      }}>
+                        <span style={{ color: '#e4e2e4' }}>{item.name}</span>
+                        <span style={{ color: '#aac7ff', fontWeight: '600' }}>{item.progress}%</span>
+                      </div>
+                      <div style={{
+                        width: '100%',
+                        height: '3px',
+                        background: 'rgba(53, 52, 55, 1)',
+                        borderRadius: '9999px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          height: '100%',
+                          width: `${item.progress}%`,
+                          background: '#aac7ff',
+                          borderRadius: '9999px',
+                          transition: 'width 0.3s ease'
+                        }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          )}
 
-      {/* Bottom Summary Bar */}
-      <div style={{
-        position: 'fixed',
-        bottom: '32px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        background: 'rgba(30, 41, 59, 0.6)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '12px',
-        padding: '16px 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '48px',
-        zIndex: 20,
-        maxWidth: '960px',
-        width: 'calc(100% - 64px)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Widget Footer */}
           <div style={{
-            height: '40px',
-            width: '40px',
-            borderRadius: '9999px',
-            background: 'rgba(255, 180, 171, 0.2)',
+            padding: '8px 12px',
+            background: 'rgba(0, 0, 0, 0.2)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(255, 180, 171, 0.3)',
-            boxShadow: '0 0 12px rgba(255, 180, 171, 0.3)'
+            fontSize: '10px',
+            color: '#c0c6d6'
           }}>
-            <span style={{ fontSize: '20px' }}>🔥</span>
+            <span>Last updated: {new Date().toLocaleTimeString()}</span>
+            <span>v2.4.0</span>
           </div>
-          <div>
-            <p style={{ fontSize: '11px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Streak</p>
-            <p style={{ fontSize: '18px', fontWeight: '900', color: '#e4e2e4', lineHeight: '1' }}>{data.streak} Days</p>
-          </div>
-        </div>
-
-        <div style={{ height: '40px', width: '1px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            height: '40px',
-            width: '40px',
-            borderRadius: '9999px',
-            background: 'rgba(71, 226, 102, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(71, 226, 102, 0.3)',
-            boxShadow: '0 0 12px rgba(71, 226, 102, 0.3)'
-          }}>
-            <span style={{ fontSize: '20px' }}>📊</span>
-          </div>
-          <div>
-            <p style={{ fontSize: '11px', color: '#c0c6d6', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Daily Score</p>
-            <p style={{ fontSize: '18px', fontWeight: '900', color: '#e4e2e4', lineHeight: '1' }}>{Math.round(data.score)}%</p>
-          </div>
-        </div>
-
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button
-            onClick={handleRefresh}
-            disabled={data.loading}
-            style={{
-              padding: '8px 16px',
-              background: '#aac7ff',
-              color: '#003064',
-              border: 'none',
-              borderRadius: '8px',
-              fontWeight: '700',
-              fontSize: '14px',
-              cursor: data.loading ? 'not-allowed' : 'pointer',
-              boxShadow: '0 8px 16px rgba(170, 199, 255, 0.2)',
-              transition: 'all 0.2s',
-              opacity: data.loading ? 0.7 : 1
-            }}
-            onMouseEnter={(e) => !data.loading && (e.target.style.filter = 'brightness(1.1)')}
-            onMouseLeave={(e) => !data.loading && (e.target.style.filter = 'brightness(1)')}
-          >
-            {data.loading ? 'Loading...' : 'Refresh'}
-          </button>
         </div>
       </div>
     </ErrorBoundary>
