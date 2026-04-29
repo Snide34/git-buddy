@@ -306,20 +306,21 @@ function App() {
         display: 'flex',
         height: '100vh',
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
+        alignItems: 'stretch',
+        justifyContent: 'stretch',
+        padding: '0',
         position: 'relative',
         zIndex: 10
       }}>
         {/* Desktop Widget Container */}
         <div style={{
-          width: '420px',
-          background: 'rgba(19, 19, 21, 0.85)',
+          width: '100%',
+          height: '100%',
+          background: 'rgba(19, 19, 21, 0.95)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
-          borderRadius: '16px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(170, 199, 255, 0.1)',
+          borderRadius: '0px',
+          boxShadow: 'none',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -403,7 +404,7 @@ function App() {
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
-              maxHeight: 'calc(100vh - 200px)',
+              flex: 1,
               overflowY: 'auto'
             }} className="hide-scrollbar">
               

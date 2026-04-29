@@ -22,7 +22,8 @@ function createWindow() {
     x: Math.floor(width - 450 - 20),
     y: Math.floor(height - 800 - 20),
     frame: false,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#00000000',
     alwaysOnTop: true,
     skipTaskbar: false,
     resizable: false,
@@ -31,10 +32,13 @@ function createWindow() {
     maximizable: false,
     closable: true,
     show: false,
+    hasShadow: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      enableRemoteModule: false,
+      sandbox: true
     }
   });
 
