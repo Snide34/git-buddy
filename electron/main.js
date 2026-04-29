@@ -17,15 +17,16 @@ function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   
   mainWindow = new BrowserWindow({
-    width: 380,
-    height: 600,
-    x: width - 400,
-    y: 20,
-    frame: false,
-    transparent: true,
-    alwaysOnTop: true,
-    skipTaskbar: true,
+    width: 500,
+    height: 650,
+    x: Math.floor((width - 500) / 2),
+    y: Math.floor((height - 650) / 2),
+    frame: true,
+    transparent: false,
+    alwaysOnTop: false,
+    skipTaskbar: false,
     resizable: true,
+    backgroundColor: '#1e293b',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
