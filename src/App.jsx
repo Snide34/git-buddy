@@ -234,11 +234,11 @@ function App() {
         }
         
         .github-glow {
-          box-shadow: 0 0 8px #47e266;
+          box-shadow: none;
         }
         
         .leetcode-glow {
-          box-shadow: 0 0 8px #ce7f00;
+          box-shadow: none;
         }
         
         .hide-scrollbar::-webkit-scrollbar {
@@ -286,7 +286,7 @@ function App() {
           left: '-96px',
           width: '384px',
           height: '384px',
-          background: 'rgba(170, 199, 255, 0.1)',
+          background: 'rgba(170, 199, 255, 0.05)',
           borderRadius: '9999px',
           filter: 'blur(120px)'
         }}></div>
@@ -296,7 +296,7 @@ function App() {
           right: '-96px',
           width: '384px',
           height: '384px',
-          background: 'rgba(255, 184, 104, 0.1)',
+          background: 'rgba(255, 184, 104, 0.05)',
           borderRadius: '9999px',
           filter: 'blur(120px)'
         }}></div>
@@ -317,7 +317,7 @@ function App() {
           width: '100%',
           height: '100%',
           background: 'rgba(19, 19, 21, 0.50)',
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '0px',
           boxShadow: 'none',
@@ -332,7 +332,7 @@ function App() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 16px',
-            background: 'rgba(0, 0, 0, 0.2)',
+            background: 'rgba(0, 0, 0, 0.1)',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             cursor: 'grab'
           }}>
@@ -347,7 +347,7 @@ function App() {
                 background: '#FF5F57',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: '0 0 4px rgba(255, 95, 87, 0.5)'
+                boxShadow: '0 0 2px rgba(255, 95, 87, 0.3)'
               }} onClick={() => window.electron?.closeWindow()}></div>
               <div style={{
                 width: '12px',
@@ -356,7 +356,7 @@ function App() {
                 background: '#FFBD2E',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: '0 0 4px rgba(255, 189, 46, 0.5)'
+                boxShadow: '0 0 2px rgba(255, 189, 46, 0.3)'
               }} onClick={() => setIsMinimized(!isMinimized)}></div>
               <div style={{
                 width: '12px',
@@ -365,7 +365,7 @@ function App() {
                 background: '#28CA42',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: '0 0 4px rgba(40, 202, 66, 0.5)'
+                boxShadow: '0 0 2px rgba(40, 202, 66, 0.3)'
               }}></div>
             </div>
             <h3 style={{
@@ -460,7 +460,7 @@ function App() {
                         style={{
                           background: intensities[intensity],
                           border: isToday ? '1px solid #8B5CF6' : 'none',
-                          boxShadow: isToday ? '0 0 6px #ce7f00' : 'none'
+                          boxShadow: isToday ? '0 0 2px #ce7f00' : 'none'
                         }}
                       ></div>
                     );
@@ -632,7 +632,7 @@ function App() {
           {/* Widget Footer */}
           <div style={{
             padding: '8px 12px',
-            background: 'rgba(0, 0, 0, 0.2)',
+            background: 'rgba(0, 0, 0, 0.1)',
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
             justifyContent: 'space-between',
