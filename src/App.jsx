@@ -252,7 +252,7 @@ function App() {
         
         .heatmap-grid {
           display: grid;
-          grid-template-columns: repeat(7, 1fr);
+          grid-template-columns: repeat(6, 1fr);
           gap: 2px;
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.08);
@@ -316,7 +316,7 @@ function App() {
         <div style={{
           width: '100%',
           height: '100%',
-          background: 'rgba(19, 19, 21, 0.30)',
+          background: 'rgba(19, 19, 21, 0.50)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '0px',
@@ -410,8 +410,8 @@ function App() {
               
               {/* LeetCode Mini Card */}
               <div style={{
-                background: 'rgba(206, 127, 0, 0.1)',
-                border: '1px solid rgba(206, 127, 0, 0.2)',
+                background: 'rgba(206, 127, 0, 0.15)',
+                border: '1px solid rgba(206, 127, 0, 0.3)',
                 borderRadius: '10px',
                 padding: '10px',
                 display: 'flex',
@@ -470,8 +470,8 @@ function App() {
 
               {/* GitHub Mini Card */}
               <div style={{
-                background: 'rgba(71, 226, 102, 0.1)',
-                border: '1px solid rgba(71, 226, 102, 0.2)',
+                background: 'rgba(71, 226, 102, 0.15)',
+                border: '1px solid rgba(71, 226, 102, 0.3)',
                 borderRadius: '10px',
                 padding: '10px',
                 display: 'flex',
@@ -532,8 +532,8 @@ function App() {
                 gap: '8px'
               }}>
                 <div style={{
-                  background: 'rgba(255, 180, 171, 0.1)',
-                  border: '1px solid rgba(255, 180, 171, 0.2)',
+                  background: 'rgba(255, 180, 171, 0.15)',
+                  border: '1px solid rgba(255, 180, 171, 0.3)',
                   borderRadius: '8px',
                   padding: '8px',
                   textAlign: 'center'
@@ -542,8 +542,8 @@ function App() {
                   <p style={{ fontSize: '16px', fontWeight: '900', color: '#e4e2e4' }}>🔥 {data.streak}</p>
                 </div>
                 <div style={{
-                  background: 'rgba(71, 226, 102, 0.1)',
-                  border: '1px solid rgba(71, 226, 102, 0.2)',
+                  background: 'rgba(71, 226, 102, 0.15)',
+                  border: '1px solid rgba(71, 226, 102, 0.3)',
                   borderRadius: '8px',
                   padding: '8px',
                   textAlign: 'center'
@@ -555,8 +555,8 @@ function App() {
 
               {/* Today's Tasks */}
               <div style={{
-                background: 'rgba(170, 199, 255, 0.1)',
-                border: '1px solid rgba(170, 199, 255, 0.2)',
+                background: 'rgba(170, 199, 255, 0.15)',
+                border: '1px solid rgba(170, 199, 255, 0.3)',
                 borderRadius: '10px',
                 padding: '8px'
               }}>
@@ -586,8 +586,8 @@ function App() {
 
               {/* Sprint Progress */}
               <div style={{
-                background: 'rgba(170, 199, 255, 0.1)',
-                border: '1px solid rgba(170, 199, 255, 0.2)',
+                background: 'rgba(170, 199, 255, 0.15)',
+                border: '1px solid rgba(170, 199, 255, 0.3)',
                 borderRadius: '10px',
                 padding: '8px'
               }}>
