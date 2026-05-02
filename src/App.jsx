@@ -316,7 +316,7 @@ function App() {
         <div style={{
           width: '100%',
           height: '100%',
-          background: 'rgba(19, 19, 21, 0.50)',
+          background: 'rgba(19, 19, 21, 0)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '0px',
@@ -332,7 +332,7 @@ function App() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 16px',
-            background: 'rgba(0, 0, 0, 0.1)',
+            background: 'rgba(0, 0, 0, 0)',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             cursor: 'grab'
           }}>
@@ -632,7 +632,7 @@ function App() {
           {/* Widget Footer */}
           <div style={{
             padding: '8px 12px',
-            background: 'rgba(0, 0, 0, 0.1)',
+            background: 'rgba(0, 0, 0, 0)',
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
             justifyContent: 'space-between',
