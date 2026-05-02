@@ -22,7 +22,7 @@ function createWindow() {
     x: Math.floor(width - 450 - 20),
     y: Math.floor(height - 800 - 20),
     frame: false,
-    transparent: false,
+    transparent: true,
     backgroundColor: '#00000000',
     alwaysOnTop: true,
     skipTaskbar: false,

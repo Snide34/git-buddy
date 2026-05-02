@@ -307,19 +307,20 @@ function App() {
         display: 'flex',
         height: '100vh',
         width: '100%',
-        alignItems: 'stretch',
-        justifyContent: 'stretch',
-        padding: '0',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        padding: '12px',
         position: 'relative',
-        zIndex: 10
+        zIndex: 10,
+        background: 'transparent'
       }}>
-        {/* Desktop Widget Container */}
+        {/* Desktop Widget Container - Transparent */}
         <div style={{
           width: '100%',
           height: '100%',
-          background: 'rgba(15, 15, 18, 0.85)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
+          background: 'transparent',
+          backdropFilter: 'none',
+          border: 'none',
           borderRadius: '0px',
           boxShadow: 'none',
           display: 'flex',
@@ -332,9 +333,9 @@ function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '12px 16px',
-            background: 'rgba(0, 0, 0, 0.15)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '8px 12px',
+            background: 'transparent',
+            borderBottom: 'none',
             cursor: 'grab'
           }}>
             <div style={{
@@ -401,12 +402,13 @@ function App() {
           {/* Widget Content */}
           {!isMinimized && (
             <div style={{
-              padding: '12px',
+              padding: '0px',
               display: 'flex',
               flexDirection: 'column',
               gap: '10px',
               flex: 1,
-              overflowY: 'auto'
+              overflowY: 'auto',
+              width: '100%'
             }} className="hide-scrollbar">
               
               {/* LeetCode Mini Card */}
@@ -633,8 +635,8 @@ function App() {
           {/* Widget Footer */}
           <div style={{
             padding: '8px 12px',
-            background: 'rgba(0, 0, 0, 0.15)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'transparent',
+            borderTop: 'none',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
